@@ -7,6 +7,7 @@ export const PAGES_LIST: NavigablePage[] = [
   },
   { path: 'login', translation: 'navbar.menu.loginPage' },
   { path: '', translation: 'navbar.menu.homePage' },
+  { path: 'user-management', translation: 'navbar.menu.userManagement' },
 ];
 
 export const AVAILABLE_LANGUAGES: SelectableLanguage[] = [

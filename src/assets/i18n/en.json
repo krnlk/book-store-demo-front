@@ -9,7 +9,8 @@
         "menu": {
             "registerPage": "Register",
             "loginPage": "Login",
-            "homePage": "Home"
+            "homePage": "Home",
+            "userManagement": "User management"
         }
     },
     "loginPage": {
