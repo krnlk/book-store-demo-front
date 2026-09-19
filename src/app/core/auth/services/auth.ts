@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { User } from '../../layout/models/user.models';
 import { UserRequest } from '../pages/models/user-request';
 
 @Injectable({
@@ -21,12 +22,13 @@ export class Auth {
 
   registerUser(userRequest: UserRequest): Observable<boolean> {
     const url = this.baseURL + 'register';
-    const body = {
-      email: userRequest.email,
-      login: userRequest.login,
-      password: userRequest.password,
-      dateOfBirth: userRequest.dateOfBirth,
-    };
+    // const body: User = {
+    //   email: userRequest.email,
+    //   login: userRequest.login,
+    //   password: userRequest.password,
+    //   dateOfBirth: userRequest.dateOfBirth,
+    // };
+    const body: User = { ...userRequest };
 
     return this.httpClient.post<boolean>(url, body);
   }
