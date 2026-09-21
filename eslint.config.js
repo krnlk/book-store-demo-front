@@ -1,37 +1,32 @@
 // @ts-check
-const prettierPlugin = require("eslint-plugin-prettier");
-const typescriptParser = require("@typescript-eslint/parser");
-const tsPlugin = require("@typescript-eslint/eslint-plugin");
-const angularPlugin = require("@angular-eslint/eslint-plugin");
-const angularTemplateParser = require("@angular-eslint/template-parser");
-const eslintPluginPrettierRecommended = require("eslint-plugin-prettier/recommended");
-module.exports = [
+import js from "@eslint/js";
+import { defineConfig } from "eslint/config";
+import tseslint from "typescript-eslint";
+import angular from "angular-eslint";
+import eslintConfigPrettier from "eslint-config-prettier/flat";
+import eslintPluginPrettier from "eslint-plugin-prettier";
+
+export default defineConfig([
   {
-    ignores: [".cache/", ".git/", ".github/", "node_modules/"],
+    ignores: ["**/node_modules/**", "**/dist/**", ".angular/**", ".git/**"],
   },
   {
     files: ["**/*.ts"],
+    extends: [
+      js.configs.recommended,
+      tseslint.configs.recommendedTypeChecked,
+      angular.configs.tsRecommended,
+    ],
     languageOptions: {
-      parser: typescriptParser,
       parserOptions: {
-        project: [
-          "./tsconfig.json",
-          "./tsconfig.app.json",
-          "./tsconfig.spec.json",
-        ],
+        projectService: true,
       },
     },
-    plugins: {
-      "@typescript-eslint": tsPlugin,
-      "@angular-eslint": angularPlugin,
-      prettier: prettierPlugin,
-    },
+    processor: angular.processInlineTemplates,
     rules: {
-      ...tsPlugin.configs.recommended.rules,
-      ...angularPlugin.configs.recommended.rules,
-      ...prettierPlugin.configs?.rules,
+      "prettier/prettier": ["error", { parser: "typescript" }],
       "@angular-eslint/directive-selector": [
-        "warn",
+        "error",
         {
           type: "attribute",
           prefix: "pgd",
@@ -39,36 +34,33 @@ module.exports = [
         },
       ],
       "@angular-eslint/component-selector": [
-        "warn",
+        "error",
         {
           type: "element",
           prefix: "pgd",
           style: "kebab-case",
         },
       ],
-      "import/order": "off",
-      "@typescript-eslint/no-explicit-any": ["off"],
-      "@typescript-eslint/member-ordering": 0,
-      "@typescript-eslint/naming-convention": 0,
-      "@angular-eslint/no-host-metadata-property": "off",
-      "@angular-eslint/no-output-on-prefix": "off",
-      "@typescript-eslint/ban-types": "off",
-      "@typescript-eslint/no-inferrable-types": "off",
+      "@typescript-eslint/unbound-method": "off",
     },
   },
   {
     files: ["**/*.html"],
-    languageOptions: {
-      parser: angularTemplateParser,
-    },
-    plugins: {
-      "@angular-eslint": angularPlugin,
-      "@angular-eslint/template": angularPlugin,
-      prettier: prettierPlugin,
-    },
+    extends: [
+      angular.configs.templateRecommended,
+      angular.configs.templateAccessibility,
+    ],
     rules: {
       "prettier/prettier": ["error", { parser: "angular" }],
     },
   },
-  eslintPluginPrettierRecommended,
-];
+  {
+    plugins: {
+      prettier: eslintPluginPrettier,
+    },
+    rules: {
+      ...eslintConfigPrettier.rules,
+      "prettier/prettier": "error",
+    },
+  },
+]);
